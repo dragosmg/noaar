@@ -14,3 +14,4 @@ BugReports: https://github.com/dragosmg/noaar/issues
 Imports: 
     dplyr,
     lubridate
+RoxygenNote: 6.1.1
