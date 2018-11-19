@@ -2,14 +2,14 @@
 #'
 #' The function takes a raw NOAA data frame and returns a clean data frame.
 #'
-#' @param data
+#' @param data data frame containing raw NOAA data
 #'
-#' @return
+#' @return a data frame of cleaned NOAA data
 #' @export
 #'
-#' @importFrom dplyr filter, if_else, mutate
+#' @importFrom dplyr filter if_else mutate
 #' @importFrom lubridate ymd
-#' @importFrom magrittr `%>%``
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom stringr str_c
 #'
@@ -20,8 +20,11 @@
 eq_clean_data <- function(data){
     data %>%
         dplyr::filter(.data$YEAR > 1000) %>%
-        dplyr::mutate(MONTH = dplyr::if_else(is.na(MONTH), 1L, MONTH),
-                      DAY = dplyr::if_else(is.na(DAY), 1L, DAY),
-                      date = stringr::str_c(YEAR, MONTH, DAY, sep = "-"),
+        dplyr::mutate(MONTH = dplyr::if_else(is.na(.data$MONTH),
+                                                   1L, .data$MONTH),
+                      DAY = dplyr::if_else(is.na(.data$DAY),
+                                           1L, .data$DAY),
+                      date = stringr::str_c(
+                          .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
                       date = lubridate::ymd(date))
 }
