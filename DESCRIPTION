@@ -18,3 +18,5 @@ Imports:
     magrittr,
     stringr
 RoxygenNote: 6.1.1
+Suggests: 
+    covr
