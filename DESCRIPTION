@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R:
     c(person(given = "Dragoș",
              family = "Moldovan-Grünfeld",
-             role = "aut",
+             role = c("aut", "cre"),
              email = "dragos.mold@gmail.com"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
