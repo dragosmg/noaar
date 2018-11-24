@@ -1,22 +1,27 @@
-#' Clean Location Name
+#' Cleans earthquake location data
 #'
-#' Cleans LOCATION_NAME by stripping out the country name (including the colon)
-#' and converts names to title case (as opposed to all caps).
+#' @param data A data frame with raw data obtained from NOAA website
 #'
-#' @param data data frame containing raw NOAA data
+#' @return A data frame with cleaned LOCATION_NAME column
 #'
-#' @return a data frame with clean location names
-#' @export
+#' @details This function transforms NOAA data frame LOCATION_NAME column by
+#' trimming the country name (if applicable) and converting to title case
 #'
-#' @importFrom rlang .data
-#' @importFrom stringr str_replace str_to_title word
+#' @note The function is not exported
 #'
 #' @examples
-eq_location_clean <- function(data){
-    data %>%
-        dplyr::mutate(pattern = stringr::word(.data$LOCATION_NAME),
-               LOCATION_NAME = stringr::str_replace(.data$LOCATION_NAME,
-                                                    .data$pattern, ""),
-               LOCATION_NAME = stringr::str_to_title(.data$LOCATION_NAME)) %>%
-        dplyr::select(-.data$pattern)
+#' \dontrun{
+#' data <- readr::read_delim("earthquakes.tsv.gz", delim = "\t")
+#' clean_data <- eq_location_clean(data)
+#' }
+#'
+#' @importFrom dplyr %>% mutate
+#' @importFrom stringr str_replace str_trim str_to_title
+eq_location_clean <- function(data) {
+    data <- data %>%
+        dplyr::mutate_(LOCATION_NAME = ~LOCATION_NAME %>%
+                           stringr::str_replace(paste0(COUNTRY, ":"), "") %>%
+                           stringr::str_trim("both") %>%
+                           stringr::str_to_title())
+    data
 }

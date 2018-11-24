@@ -2,25 +2,37 @@
 % Please edit documentation in R/leaflet.R
 \name{eq_map}
 \alias{eq_map}
-\title{Leaflet map of earthquakes}
+\title{eq_map}
 \usage{
 eq_map(data, annot_col)
 }
 \arguments{
-\item{data}{A data frame containing cleaned NOAA earthquake data}
+\item{data}{A cleaned version of a NOAA data frame}
 
-\item{annot_col}{A character. The name of the column in the data that should
-be used as descriptor.}
+\item{annot_col}{A character. The column of the data frame for which to annotate the
+pop up window for the selected earthquake.}
 }
 \value{
 A leaflet map with earthquakes and annotations.
 }
 \description{
-This function creates a \code{leaflet} map of selected earthquakes based on
-input NOAA earthquake cleaned data.
+A function to create a leaflet map of earthquakes and annotations.
+}
+\details{
+\code{eq_map} creates a map with the epicenters
+(\code{LATITUDE} & \code{LONGITUDE}) of selected earthquakes and annotates
+each point with a pop up window containing annotation data stored in a
+column of the data frame (e.g. \code{DATE})
 }
 \examples{
 \dontrun{
-eq_map(data, annot_col = "LOCATION_NAME")
+NOAAdf <- eq_clean_data("signif.txt")
+NOAAdf \%>\%
+        dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%
+        eq_map(annot_col = "DATE")
 }
+
+}
+\references{
+\url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}
 }

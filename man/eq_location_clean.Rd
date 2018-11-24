@@ -2,17 +2,30 @@
 % Please edit documentation in R/eq_location_clean.R
 \name{eq_location_clean}
 \alias{eq_location_clean}
-\title{Clean Location Name}
+\title{Cleans earthquake location data}
 \usage{
 eq_location_clean(data)
 }
 \arguments{
-\item{data}{data frame containing raw NOAA data}
+\item{data}{A data frame with raw data obtained from NOAA website}
 }
 \value{
-a data frame with clean location names
+A data frame with cleaned LOCATION_NAME column
 }
 \description{
-Cleans LOCATION_NAME by stripping out the country name (including the colon)
-and converts names to title case (as opposed to all caps).
+Cleans earthquake location data
+}
+\details{
+This function transforms NOAA data frame LOCATION_NAME column by
+trimming the country name (if applicable) and converting to title case
+}
+\note{
+The function is not exported
+}
+\examples{
+\dontrun{
+data <- readr::read_delim("earthquakes.tsv.gz", delim = "\\t")
+clean_data <- eq_location_clean(data)
+}
+
 }

@@ -1,34 +1,44 @@
-#' Clean Raw NOAA Data
+#' Cleans source data from NOAA
 #'
-#' The function takes a raw NOAA data frame and returns a clean data frame.
+#' \code{eq_clean_data} cleans date, latitude and longitude, and location name
+#' from the source NOAA data
 #'
-#' @param data data frame containing raw NOAA data
+#' @param data A data frame with raw data obtained from NOAA website (see below)
 #'
-#' @return a data frame of cleaned NOAA data
-#' @export
+#' @return A data frame with cleaned date, latitude, longitude and location
+#' columns
 #'
-#' @importFrom dplyr filter if_else mutate
-#' @importFrom lubridate ymd
-#' @importFrom magrittr %>%
-#' @importFrom rlang .data
-#' @importFrom stringr str_c
+#' @details The function requires raw date obtained from NOAA site
+#' \url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}. It adds
+#' a column DATE with cleaned date (Date format), transforms LATITUDE and
+#' LONGITUDE columns as numeric objects and transforms LOCATION_NAME by removing
+#' the country and transforming to title case.
 #'
 #' @examples
 #' \dontrun{
-#' eq_clean_data(raw_noaa_data)
+#' data <- readr::read_delim("earthquakes.tsv.gz", delim = "\t")
+#' clean_data <- eq_clean_data(data)
 #' }
-eq_clean_data <- function(data){
+#'
+#' @importFrom dplyr %>% mutate select
+#' @importFrom lubridate ymd
+#' @importFrom stringr str_pad
+#'
+#' @export
+eq_clean_data <- function(data) {
     data <- data %>%
-        dplyr::filter(.data$YEAR > 1000) %>%
-        dplyr::mutate(MONTH = dplyr::if_else(is.na(.data$MONTH),
-                                                   1L, .data$MONTH),
-                      DAY = dplyr::if_else(is.na(.data$DAY),
-                                           1L, .data$DAY),
-                      DATE = stringr::str_c(
-                          .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
-                      DATE = lubridate::ymd(.data$DATE),
-                      LATITUDE = as.numeric(.data$LATITUDE),
-                      LONGITUDE = as.numeric(.data$LONGITUDE))
+        dplyr::mutate_(
+            year_fix = ~stringr::str_pad(as.character(abs(YEAR)), width = 4,
+                                         side = "left", pad = "0"),
+            date_paste = ~paste(year_fix, MONTH, DAY, sep = "-"),
+            DATE = ~lubridate::ymd(date_paste, truncated = 2)) %>%
+        dplyr::select_(quote(-year_fix), quote(-date_paste))
+
+    lubridate::year(data$DATE) <- data$YEAR
+
+    data <- data %>%
+        dplyr::mutate_(LATITUDE = ~as.numeric(LATITUDE),
+                       LONGITUDE = ~as.numeric(LONGITUDE))
 
     data <- eq_location_clean(data)
 

@@ -2,27 +2,37 @@
 % Please edit documentation in R/leaflet.R
 \name{eq_create_label}
 \alias{eq_create_label}
-\title{Creates a label for leaflet map}
+\title{eq_create_label}
 \usage{
 eq_create_label(data)
 }
 \arguments{
-\item{data}{A data frame containing cleaned NOAA earthquake data}
+\item{data}{A cleaned version of a NOAA data frame}
 }
 \value{
-A character vector with labels
+A character vector of strings in html format to label the popups in
+  \code{\link{eq_map}}
 }
 \description{
-This function creates a label for the \code{leaflet} map based on location
-name, magnitude and casualties from NOAA earthquake data
+A function to create labels for popups of earthquakes in leaflet maps.
 }
 \details{
-The input \code{data.frame} needs to include columns LOCATION_NAME,
-EQ_PRIMARY and TOTAL_DEATHS with the earthquake location, magintude and
-total casualties respectively.
+\code{eq_create_label} pust together a character string for each earthquake
+that will show the cleaned location (\code{LOCATION_NAME}, as cleaned by \code{eq_location_clean}),
+the magnitude (e.g., \code{EQ_PRIMARY}), and the total number of deaths (e.g.,
+\code{TOTAL_DEATHS}), with boldface labels for each. If an earthquake has missing
+values for any of these, both the label and the value should be skipped.
 }
 \examples{
 \dontrun{
-eq_create_label(data)
+NOAAdf <- eq_clean_data("signif.txt")
+NOAAdf \%>\%
+        dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(DATE) >= 2000) \%>\%
+        dplyr::mutate(popup_text = eq_create_label(.)) \%>\%
+        eq_map(annot_col = "popup_text")
 }
+
+}
+\references{
+\url{https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1}
 }
