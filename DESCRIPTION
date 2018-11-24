@@ -20,7 +20,8 @@ Imports:
     lubridate,
     rlang,
     magrittr,
-    stringr
+    stringr,
+    ggplot2
 RoxygenNote: 6.1.1
 Suggests: 
     covr,
