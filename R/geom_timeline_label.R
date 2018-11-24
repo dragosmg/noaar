@@ -1,74 +1,97 @@
-#' Add Annotation to Earthquake Data
+#' Timeline labels of earthquakes
 #'
-#' A geom for labelling earthquake timeline plots created using
-#' \code{\link{geom_timeline}}
+#' @description This geom plots timeline labels of earthquakes. It assumes that
+#' \code{geom_timeline} was used to create the timelines
 #'
-#' This geom adds a vertical line to each data point with a text annotation
-#' (e.g. the location of the eartquake) attached to each line. Aesthetics are x,
-#' which is the date of the eartquake and label which takes the column name from
-#' which annotations will be obtained.
+#' @inheritParams ggplot2::geom_text
+
+#' @param n_max An integer. If used, it only plots the labels for the
+#' \code{n_max} largest earthquakes in the selected group in the timeline
 #'
-#' @inheritParams ggplot2::geom_point
-#' @inheritParams geom_timeline
-#' @param n_max integer corresponding to the top number of earthquakes to label,
-#'   sorted in descending order by magnitude
-#' @param ... any additional relevant arguments
+#' @details The function plots timeline labels of earthquakes based on cleaned
+#' NOAA data. It should be used with combination with \code{geom_timeline}. The
+#' required aesthetics for this geom is \code{label} that should contain
+#' string for labeling each data point.
 #'
-#' @return a ggplot2 graphical object
 #' @export
+#'
+#' @importFrom ggplot2 layer
 #'
 #' @examples
 #' \dontrun{
-#'
+#' data %>% eq_clean_data() %>%
+#'    filter(COUNTRY %in% c("GREECE", "ITALY"), YEAR > 2000) %>%
+#'    ggplot(aes(x = DATE,
+#'               y = COUNTRY,
+#'               color = as.numeric(TOTAL_DEATHS),
+#'               size = as.numeric(EQ_PRIMARY)
+#'    )) +
+#'    geom_timeline() +
+#'    geom_timeline_label(aes(label = LOCATION_NAME), n_max = 5) +
+#'    theme_timeline() +
+#'    labs(size = "Richter scale value", color = "# deaths")
 #' }
-geom_timeline_label <- function(mapping = NULL, data = NULL,
-                                stat = "timeline_label", position = "identity",
-                                show.legend = NA, inherit.aes = TRUE,
-                                xmin = NULL, xmax = NULL, n_max = NULL,
-                                na.rm = FALSE, ...) {
+geom_timeline_label <- function(mapping = NULL, data = NULL, stat = "identity",
+                                position = "identity", ..., na.rm = FALSE,
+                                n_max = NULL, show.legend = NA,
+                                inherit.aes = TRUE) {
+
     ggplot2::layer(
-        geom = GeomTimelineLabel, stat = stat, mapping = mapping, data = data,
-        position = position, show.legend = show.legend,
-        inherit.aes = inherit.aes,
-        params = list(xmin = xmin, xmax = xmax, n_max = n_max, na.rm = na.rm,
-            ...)
+        geom = GeomTimelineLabel, mapping = mapping,
+        data = data, stat = stat, position = position,
+        show.legend = show.legend, inherit.aes = inherit.aes,
+        params = list(na.rm = na.rm, n_max = n_max, ...)
     )
 }
 
-
-#' @name GeomTimelineLabel
-#' @title GeomTimelineLabel
-#' @description geom_timeline_label-ggproto. See \code{\link{geom_timeline_label}}.
-#' @import ggplot2
-#' @import grid
+#' @importFrom ggplot2 draw_key_blank
+#' @importFrom dplyr %>% group_by top_n ungroup
+#' @importFrom grid gpar linesGrob textGrob gList
 GeomTimelineLabel <-
     ggplot2::ggproto(
         "GeomTimelineLabel", ggplot2::Geom,
         required_aes = c("x", "label"),
-        default_aes = ggplot2::aes(y = NULL, measure = NULL, alpha = 0.3,
-                                   color = "grey", fill = "grey", lty = 1,
-                                   lwd = 1),
         draw_key = ggplot2::draw_key_blank,
-        draw_group = function(data, panel_params, coord) {
-            coords <- coord$transform(data, panel_params)
-            grid::gList(
-                grid::segmentsGrob(
-                    x0 = coords$x,
-                    y0 = coords$y,
-                    x1 = coords$x,
-                    y1 = coords$y + .1,
-                    gp = grid::gpar(col = "lightgrey",
-                                    lty = coords$lty,
-                                    lwd = coords$lwd)),
-                grid::textGrob(
-                    label = coords$label,
-                    x = coords$x,
-                    y = coords$y + .11,
-                    just = c('left', 'center'),
-                    rot = 45,
-                    gp = grid::gpar(fontsize = grid::unit(10, "char")
-                    )
+        setup_data = function(data, params) {
+            if (!is.null(params$n_max)) {
+                if (!("size" %in% colnames(data))) {
+                    stop(paste("'size' aesthetics needs to be",
+                               "provided when 'n_max' is defined."))
+                }
+                data <- data %>%
+                    dplyr::group_by_("group") %>%
+                    dplyr::top_n(params$n_max, size) %>%
+                    dplyr::ungroup()
+            }
+            data
+        },
+        draw_panel = function(data, panel_scales, coord, n_max) {
+
+            if (!("y" %in% colnames(data))) {
+                data$y <- 0.15
+            }
+
+            coords <- coord$transform(data, panel_scales)
+            n_grp <- length(unique(data$group))
+            offset <- 0.2 / n_grp
+
+            lines <- grid::polylineGrob(
+                x = unit(c(coords$x, coords$x), "npc"),
+                y = unit(c(coords$y, coords$y + offset), "npc"),
+                id = rep(1:dim(coords)[1], 2),
+                gp = grid::gpar(
+                    col = "grey"
                 )
             )
-            }
-)
+
+            names <- grid::textGrob(
+                label = coords$label,
+                x = unit(coords$x, "npc"),
+                y = unit(coords$y + offset, "npc"),
+                just = c("left", "bottom"),
+                rot = 45
+            )
+
+            grid::gList(lines, names)
+        }
+    )
