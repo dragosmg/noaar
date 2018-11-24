@@ -18,6 +18,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#'
+#' }
 geom_timeline_label <- function(mapping = NULL, data = NULL,
                                 stat = "timeline_label", position = "identity",
                                 show.legend = NA, inherit.aes = TRUE,
