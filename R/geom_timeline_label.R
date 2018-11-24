@@ -34,3 +34,41 @@ geom_timeline_label <- function(mapping = NULL, data = NULL,
             ...)
     )
 }
+
+
+#' @name GeomTimelineLabel
+#' @title GeomTimelineLabel
+#' @description geom_timeline_label-ggproto. See \code{\link{geom_timeline_label}}.
+#' @import ggplot2
+#' @import grid
+GeomTimelineLabel <-
+    ggplot2::ggproto(
+        "GeomTimelineLabel", ggplot2::Geom,
+        required_aes = c("x", "label"),
+        default_aes = ggplot2::aes(y = NULL, measure = NULL, alpha = 0.3,
+                                   color = "grey", fill = "grey", lty = 1,
+                                   lwd = 1),
+        draw_key = ggplot2::draw_key_blank,
+        draw_group = function(data, panel_params, coord) {
+            coords <- coord$transform(data, panel_params)
+            grid::gList(
+                grid::segmentsGrob(
+                    x0 = coords$x,
+                    y0 = coords$y,
+                    x1 = coords$x,
+                    y1 = coords$y + .1,
+                    gp = grid::gpar(col = "lightgrey",
+                                    lty = coords$lty,
+                                    lwd = coords$lwd)),
+                grid::textGrob(
+                    label = coords$label,
+                    x = coords$x,
+                    y = coords$y + .11,
+                    just = c('left', 'center'),
+                    rot = 45,
+                    gp = grid::gpar(fontsize = grid::unit(10, "char")
+                    )
+                )
+            )
+            }
+)
