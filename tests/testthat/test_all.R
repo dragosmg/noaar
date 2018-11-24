@@ -1,6 +1,6 @@
 context("Test functions in the package")
 
-filename <- system.file("extdata/earthquakes.tsv.gz", package = "earthquakeVis")
+filename <- system.file("extdata/signif.txt.tsv", package = "noaar")
 data <- readr::read_delim(filename, delim = "\t")
 
 test_that("eq_clean_data returns data frame", {
