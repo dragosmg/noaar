@@ -22,7 +22,8 @@ Imports:
     magrittr,
     stringr,
     ggplot2,
-    scales
+    scales,
+    leaflet
 RoxygenNote: 6.1.1
 Suggests: 
     covr,
