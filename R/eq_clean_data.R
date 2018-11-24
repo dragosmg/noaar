@@ -26,5 +26,5 @@ eq_clean_data <- function(data){
                                            1L, .data$DAY),
                       DATE = stringr::str_c(
                           .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
-                      DATE = lubridate::ymd(DATE))
+                      DATE = lubridate::ymd(.data$DATE))
 }
