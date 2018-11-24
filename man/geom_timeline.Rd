@@ -53,6 +53,9 @@ rather than combining with them. This is most useful for helper functions
 that define both data and aesthetics and shouldn't inherit behaviour from
 the default plot specification, e.g. \code{\link[=borders]{borders()}}.}
 }
+\value{
+a ggplot2 graphical object
+}
 \description{
 This geom plots a timeline of earthquakes between 2 dates, with options to
 map different variables to other aesthetics. The x aesthetic is a date and
@@ -65,7 +68,6 @@ stratification (e.g. country, magnitude, etc).
    filter(COUNTRY \%in\% c("GREECE", "ITALY"), YEAR > 2000) \%>\%
    ggplot(aes(x = DATE,
               y = COUNTRY)) +
-   geom_timeline() +
-   theme_timeline()
+   geom_timeline()
 }
 }
