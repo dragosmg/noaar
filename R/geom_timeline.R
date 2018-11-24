@@ -18,8 +18,7 @@
 #'    filter(COUNTRY %in% c("GREECE", "ITALY"), YEAR > 2000) %>%
 #'    ggplot(aes(x = DATE,
 #'               y = COUNTRY)) +
-#'    geom_timeline() +
-#'    theme_timeline()
+#'    geom_timeline()
 #' }
 geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
                           position = "identity", ..., na.rm = FALSE,
