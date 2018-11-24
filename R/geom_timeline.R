@@ -7,7 +7,7 @@
 #'
 #' @inheritParams ggplot2::geom_point
 #'
-#' @return
+#' @return a ggplot2 graphical object
 #' @export
 #'
 #' @importFrom ggplot2 layer
