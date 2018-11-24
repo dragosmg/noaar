@@ -3,10 +3,10 @@ Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
 Authors@R:
-    c(person(given = "Dragoș",
-             family = "Moldovan-Grünfeld",
+    c(person(given = "Dragos",
+             family = "MG",
              role = c("aut", "cre"),
-             email = "dragos.mold@gmail.com"))
+             email = "dmgd@mg.com"))
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
@@ -28,4 +28,7 @@ Imports:
 RoxygenNote: 6.1.1
 Suggests: 
     covr,
-    testthat
+    testthat,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
