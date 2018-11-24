@@ -24,7 +24,7 @@ eq_clean_data <- function(data){
                                                    1L, .data$MONTH),
                       DAY = dplyr::if_else(is.na(.data$DAY),
                                            1L, .data$DAY),
-                      date = stringr::str_c(
+                      DATE = stringr::str_c(
                           .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
-                      date = lubridate::ymd(date))
+                      DATE = lubridate::ymd(DATE))
 }
