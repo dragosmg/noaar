@@ -30,7 +30,7 @@ geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
     )
 }
 
-#' @importFrom ggplot2 aes draw_key_point
+#' @importFrom ggplot2 aes draw_key_point ggproto
 #' @importFrom grid pointsGrob linesGrob gList gpar
 #' @importFrom scales alpha
 GeomTimeline <-
