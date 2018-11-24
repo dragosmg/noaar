@@ -1,4 +1,9 @@
-#' Title
+#' Add Annotation to Earthquake Data
+#'
+#' This geom adds a vertical line to each data point with a text annotation
+#' (e.g. the location of the eartquake) attached to each line. Aesthetics are x,
+#' which is the date of the eartquake and label which takes the column name from
+#' which annotations will be obtained.
 #'
 #' @param mapping
 #' @param data
