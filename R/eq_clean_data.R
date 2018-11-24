@@ -27,8 +27,8 @@ eq_clean_data <- function(data){
                       DATE = stringr::str_c(
                           .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
                       DATE = lubridate::ymd(.data$DATE),
-                      LATITUDE = as.numeric(LATITUDE),
-                      LONGITUDE = as.numeric(LONGITUDE))
+                      LATITUDE = as.numeric(.data$LATITUDE),
+                      LONGITUDE = as.numeric(.data$LONGITUDE))
 
     data <- eq_location_clean(data)
 
