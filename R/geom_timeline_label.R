@@ -1,20 +1,17 @@
 #' Add Annotation to Earthquake Data
 #'
+#' A geom for labelling earthquake timeline plots created using
+#' \code{\link{geom_timeline}}
+#'
 #' This geom adds a vertical line to each data point with a text annotation
 #' (e.g. the location of the eartquake) attached to each line. Aesthetics are x,
 #' which is the date of the eartquake and label which takes the column name from
 #' which annotations will be obtained.
 #'
-#' @param mapping
-#' @param data
-#' @param stat
-#' @param position
-#' @param show.legend
-#' @param inherit.aes
-#' @param xmin
-#' @param xmax
-#' @param n_max
-#' @param na.rm
+#' @inheritParams ggplot2::geom_point
+#' @inheritParams geom_timeline
+#' @param n_max integer corresponding to the top number of earthquakes to label,
+#'   sorted in descending order by magnitude
 #' @param ...
 #'
 #' @return
