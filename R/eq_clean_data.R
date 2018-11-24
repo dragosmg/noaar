@@ -18,7 +18,7 @@
 #' eq_clean_data(raw_noaa_data)
 #' }
 eq_clean_data <- function(data){
-    data %>%
+    data <- data %>%
         dplyr::filter(.data$YEAR > 1000) %>%
         dplyr::mutate(MONTH = dplyr::if_else(is.na(.data$MONTH),
                                                    1L, .data$MONTH),
@@ -26,5 +26,11 @@ eq_clean_data <- function(data){
                                            1L, .data$DAY),
                       DATE = stringr::str_c(
                           .data$YEAR, .data$MONTH, .data$DAY, sep = "-"),
-                      DATE = lubridate::ymd(.data$DATE))
+                      DATE = lubridate::ymd(.data$DATE),
+                      LATITUDE = as.numeric(LATITUDE),
+                      LONGITUDE = as.numeric(LONGITUDE))
+
+    data <- eq_location_clean(data)
+
+    data
 }
