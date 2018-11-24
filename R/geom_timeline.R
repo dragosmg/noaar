@@ -1,13 +1,11 @@
-#' Title
+#' Earthquakes timeline
 #'
-#' @param mapping
-#' @param data
-#' @param stat
-#' @param position
-#' @param na.rm
-#' @param show.legend
-#' @param inherit.aes
-#' @param ...
+#' This geom plots a timeline of earthquakes between 2 dates, with options to
+#' map different variables to other aesthetics. The x aesthetic is a date and
+#' the y aesthetic is optional and needs to be a factor indicating some
+#' stratification (e.g. country, magnitude, etc).
+#'
+#' @inheritParams ggplot2::geom_point
 #'
 #' @return
 #' @export
@@ -16,8 +14,8 @@
 #'
 #' @examples
 geom_timeline <- function(mapping = NULL, data = NULL, stat = "identity",
-                          position = "identity", na.rm = FALSE,
-                          show.legend = NA, inherit.aes = TRUE, ...) {
+                          position = "identity", ..., na.rm = FALSE,
+                          show.legend = NA, inherit.aes = TRUE) {
     ggplot2::layer(
         geom = GeomTimeline, mapping = mapping, data = data, stat = stat,
         position = position, show.legend = show.legend,
