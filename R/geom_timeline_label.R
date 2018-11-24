@@ -12,9 +12,9 @@
 #' @inheritParams geom_timeline
 #' @param n_max integer corresponding to the top number of earthquakes to label,
 #'   sorted in descending order by magnitude
-#' @param ...
+#' @param ... any additional relevant arguments
 #'
-#' @return
+#' @return a ggplot2 graphical object
 #' @export
 #'
 #' @examples
