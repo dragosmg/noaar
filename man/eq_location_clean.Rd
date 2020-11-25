@@ -24,7 +24,7 @@ The function is not exported
 }
 \examples{
 \dontrun{
-data <- readr::read_delim("earthquakes.tsv.gz", delim = "\\t")
+data <- readr::read_delim("earthquakes.tsv.gz", delim = "\t")
 clean_data <- eq_location_clean(data)
 }
 
